@@ -70,6 +70,7 @@ class StepperMotor:
           else:
             GPIO.output(xpin, False)
         StepCounter += 1
+        nextStepTime = time.time() + WaitTime
 
         # If we reach the end of the sequence start again
         if (StepCounter==StepCount):
@@ -86,7 +87,7 @@ class StepperMotor:
           return
 
       # Wait before moving on
-      nextStepTime = time.time() + WaitTime
+      
     return
 
   def cleanup(self):

@@ -21,7 +21,7 @@ try:
       motor.move(10)
       time.sleep(5)
 except Exception as ex:
-  print ex
+  print(ex)
   motor.cleanup()
 finally:
   motor.cleanup()

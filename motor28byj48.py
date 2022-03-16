@@ -57,37 +57,40 @@ class StepperMotor:
     Seq[6] = [0,0,0,1]
     Seq[7] = [1,0,0,1]
 
+    nextStepTime = 0
     # Start main loop
     while 1==1:
-      for pin in range(0, 4):
-        xpin = StepPins[pin]
-        if Seq[StepCounter][pin]!=0:
-          #print " Step %i Enable %i" %(StepCounter,xpin)
-          GPIO.output(xpin, True)
-        else:
-          GPIO.output(xpin, False)
-      StepCounter += 1
+      currentTime = time.time()
+      if nextStepTime >= currentTime: 
+        for pin in range(0, 4):
+          xpin = StepPins[pin]
+          if Seq[StepCounter][pin]!=0:
+            #print " Step %i Enable %i" %(StepCounter,xpin)
+            GPIO.output(xpin, True)
+          else:
+            GPIO.output(xpin, False)
+        StepCounter += 1
 
-      # If we reach the end of the sequence start again
-      if (StepCounter==StepCount):
-        StepCounter = 0
-      if (StepCounter<0):
-        StepCounter = StepCount
+        # If we reach the end of the sequence start again
+        if (StepCounter==StepCount):
+          StepCounter = 0
+        if (StepCounter<0):
+          StepCounter = StepCount
 
-      # counting total steps in class
-      self.totalStepsMoved += 1
-      # counting total steps on this method
-      StepsMovedInThisCall += 1
-      # print("StepsMovedInThisCall: ", StepsMovedInThisCall, "totalStepsMoved: ", self.totalStepsMoved)
-      if (StepsMovedInThisCall >= moveSteps):
-        return
+        # counting total steps in class
+        self.totalStepsMoved += 1
+        # counting total steps on this method
+        StepsMovedInThisCall += 1
+        # print("StepsMovedInThisCall: ", StepsMovedInThisCall, "totalStepsMoved: ", self.totalStepsMoved)
+        if (StepsMovedInThisCall >= moveSteps):
+          return
 
       # Wait before moving on
-      time.sleep(WaitTime)
+      nextStepTime = time.time() + WaitTime
     return
 
   def cleanup(self):
-    print "performing cleanup"
+    print("performing cleanup")
     StepPins = self.pins
     GPIO.cleanup();
     GPIO.setmode(GPIO.BOARD)

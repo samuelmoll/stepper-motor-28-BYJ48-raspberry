@@ -61,7 +61,7 @@ class StepperMotor:
     # Start main loop
     while 1==1:
       currentTime = time.time()
-      if nextStepTime >= currentTime: 
+      if nextStepTime <= currentTime: 
         for pin in range(0, 4):
           xpin = StepPins[pin]
           if Seq[StepCounter][pin]!=0:
